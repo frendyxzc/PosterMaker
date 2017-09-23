@@ -2,11 +2,13 @@
 #
 # frendyxzc@126.com
 # 2017.09.22
+#
+# [Sample]
+#   python post.py --bg 20170815112219.jpg --font msyhl.ttc --fontSize 30 --userIcon testIcon.jpg --userIconAttr 80,80,316,242 --userName 哈哈 --userNameAttr 360,335 --qr qrimg.jpg --qrAttr 142,140,191,946 --textColor 0,0,0 --output tmp.jpg
+#
+
 
 import argparse
-import os
-import os.path
-import time
 import PIL.Image as Image
 import PIL.ImageDraw as ImageDraw
 import PIL.ImageFont as ImageFont
@@ -48,45 +50,32 @@ class postMaker(object):
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--bg', type=str, default='.',
+    parser.add_argument('--bg', type=str, default='',
                        help='指定模板图片')
-    parser.add_argument('--font', type=str, default='.',
+    parser.add_argument('--font', type=str, default='',
                        help='字体')
-    parser.add_argument('--fontSize', type=str, default='.',
+    parser.add_argument('--fontSize', type=int, default='30',
                        help='字体大小')
 
     parser.add_argument('--userIcon', type=str, default='',
                        help=u'用户头像')
-    parser.add_argument('--userIconW', type=int, default='',
-                       help=u'用户头像宽')
-    parser.add_argument('--userIconH', type=int, default='',
-                       help=u'用户头像高')
-    parser.add_argument('--userIconX', type=int, default='',
-                       help=u'用户头像X坐标')
-    parser.add_argument('--userIconY', type=int, default='',
-                       help=u'用户头像Y坐标')
+    parser.add_argument('--userIconAttr', type=str, default='30,30,0,0',
+                       help=u'用户头像的宽、高、X坐标、Y坐标：W,H,X,Y')
 
-    parser.add_argument('--userName', type=str, default='',
+    parser.add_argument('--userName', type=str, default='frendy',
                        help=u'用户昵称')
-    parser.add_argument('--userNameX', type=int, default='',
-                       help=u'用户昵称X坐标')
-    parser.add_argument('--userNameY', type=int, default='',
-                       help=u'用户昵称Y坐标')
+    parser.add_argument('--userNameAttr', type=str, default='',
+                       help=u'用户昵称的X坐标、Y坐标：X,Y')
 
     parser.add_argument('--qr', type=str, default='',
                        help=u'用户二维码')
-    parser.add_argument('--qrW', type=int, default='',
-                       help=u'用户二维码宽')
-    parser.add_argument('--qrH', type=int, default='',
-                       help=u'用户二维码高')
-    parser.add_argument('--qrX', type=int, default='',
-                       help=u'用户二维码X坐标')
-    parser.add_argument('--qrY', type=int, default='',
-                       help=u'用户二维码Y坐标')
+    parser.add_argument('--qrAttr', type=str, default='30,30,0,0',
+                       help=u'用户二维码宽、高、X坐标、Y坐标：W,H,X,Y')
 
-    parser.add_argument('--textColor', type=str, default='',
-                       help=u'文字颜色，{R，G，B}')
-    parser.add_argument('--output', type=str, default='',
+    parser.add_argument('--textColor', type=str, default='0,0,0',
+                       help=u'文字颜色：R,G,B')
+
+    parser.add_argument('--output', type=str, default='post.jpg',
                        help=u'输出文件名')
     args = parser.parse_args()
     return args
@@ -96,22 +85,28 @@ def parse_args():
 if __name__ == '__main__':
     args = parse_args()
 
+    userIconAttr = args.userIconAttr.split(',')
+    userNameAttr = args.userNameAttr.split(',')
+    qrAttr = args.qrAttr.split(',')
+
+    textColor = args.textColor.split(',')
+
     pMaker = postMaker(
         bg=args.bg, font=args.font, fontSize=args.fontSize, output=args.output)
     pMaker.create(
         userIcon=args.userIcon,
-        userIconW=args.userIconW,
-        userIconH=args.userIconH,
-        userIconX=args.userIconX,
-        userIconY=args.userIconY,
+        userIconW=int(userIconAttr[0]),
+        userIconH=int(userIconAttr[1]),
+        userIconX=int(userIconAttr[2]),
+        userIconY=int(userIconAttr[3]),
         userName=args.userName,
-        userNameX=args.userNameX,
-        userNameY=args.userNameY,
+        userNameX=int(userNameAttr[0]),
+        userNameY=int(userNameAttr[1]),
         qr=args.qr,
-        qrW=args.qrW,
-        qrH=args.qrH,
-        qrX=args.qrX,
-        qrY=args.qrY,
-        textColor={'R': 0, 'G': 0, 'B': 0})
+        qrW=int(qrAttr[0]),
+        qrH=int(qrAttr[1]),
+        qrX=int(qrAttr[2]),
+        qrY=int(qrAttr[3]),
+        textColor={'R': int(textColor[0]), 'G': int(textColor[1]), 'B': int(textColor[2])})
 
     print('** done: ' + args.output)
